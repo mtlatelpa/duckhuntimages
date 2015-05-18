@@ -82,6 +82,21 @@ Sprite duck_sprite2;
 Ppmimage *duckImage2=NULL;
 GLuint duckTexture2;
 GLuint duckSil2;
+//Third Duck Sprite
+Sprite duck_sprite3;
+Ppmimage *duckImage3=NULL;
+GLuint duckTexture3;
+GLuint duckSil3;
+//Fourth Duck Sprite
+Sprite duck_sprite4;
+Ppmimage *duckImage4=NULL;
+GLuint duckTexture4;
+GLuint duckSil4;
+//Fifth Duck Sprite
+Sprite duck_sprite5;
+Ppmimage *duckImage5=NULL;
+GLuint duckTexture5;
+GLuint duckSil5;
 int show_duck = 0;
 int silhouette = 1;
 //Bullet Sprite
@@ -467,6 +482,48 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w2, h2, 0, GL_RGB, GL_UNSIGNED_BYTE, duckImage2->data);
 	//-------------------------------------------------------------------
+	
+	//-------------------------------------------------------------------
+	//duck sprite 3
+	glGenTextures(1, &duckTexture3);
+	glGenTextures(1, &duckSil3);
+	duckImage3 = ppm6GetImage("./images/flyaway.ppm");
+	int w9 = duckImage3->width;
+	int h9 = duckImage3->height;
+	glBindTexture(GL_TEXTURE_2D, duckTexture3);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w9, h9, 0, GL_RGB, GL_UNSIGNED_BYTE, duckImage3->data);
+	//-------------------------------------------------------------------
+	
+	//-------------------------------------------------------------------
+	//duck sprite 4
+	glGenTextures(1, &duckTexture4);
+	glGenTextures(1, &duckSil4);
+	duckImage4 = ppm6GetImage("./images/duckshot.ppm");
+	int w7 = duckImage4->width;
+	int h7 = duckImage4->height;
+	glBindTexture(GL_TEXTURE_2D, duckTexture4);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w7, h7, 0, GL_RGB, GL_UNSIGNED_BYTE, duckImage4->data);
+	//-------------------------------------------------------------------
+	
+	//-------------------------------------------------------------------
+	//duck sprite 5
+	glGenTextures(1, &duckTexture5);
+	glGenTextures(1, &duckSil5);
+	duckImage5 = ppm6GetImage("./images/fallingduck.ppm");
+	int w8 = duckImage5->width;
+	int h8 = duckImage5->height;
+	glBindTexture(GL_TEXTURE_2D, duckTexture5);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w8, h8, 0, GL_RGB, GL_UNSIGNED_BYTE, duckImage5->data);
+	//-------------------------------------------------------------------
 
 	//-------------------------------------------------------------------
 	//duck silhouette 
@@ -490,6 +547,42 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w2, h2, 0,
 	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData2);
 	delete [] silhouetteData2;
+	//-------------------------------------------------------------------
+
+	//-------------------------------------------------------------------
+	//duck silhouette 3 
+	glBindTexture(GL_TEXTURE_2D, duckSil3);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	////must build a new set of data...
+	unsigned char *silhouetteData3 = buildAlphaData(duckImage3);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w9, h9, 0,
+	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData3);
+	delete [] silhouetteData3;
+	//-------------------------------------------------------------------
+
+	//-------------------------------------------------------------------
+	//duck silhouette 4
+	glBindTexture(GL_TEXTURE_2D, duckSil4);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	////must build a new set of data...
+	unsigned char *silhouetteData4 = buildAlphaData(duckImage4);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w7, h7, 0,
+	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData4);
+	delete [] silhouetteData4;
+	//-------------------------------------------------------------------
+
+	//-------------------------------------------------------------------
+	//duck silhouette 5 
+	glBindTexture(GL_TEXTURE_2D, duckSil5);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	////must build a new set of data...
+	unsigned char *silhouetteData5 = buildAlphaData(duckImage5);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w8, h8, 0,
+	GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData5);
+	delete [] silhouetteData5;
 	//-------------------------------------------------------------------
 
 	//-------------------------------------------------------------------
@@ -1407,34 +1500,124 @@ void render(Game *game)
 		 glColor3ub(255, 0, 0);
 		while(dd)
 		{
-		w = dd->s.width;
-		h = dd->s.height;
-		x = dd->s.center.x;
-		y = dd->s.center.y;
-		glBegin(GL_QUADS);
-		glVertex2f(x-w, y+h);
-		glVertex2f(x-w, y-h);
-		glVertex2f(x+w, y-h);
-		glVertex2f(x+w, y+h);
-		glEnd();
-		dd = dd->next;
+		    w = dd->s.width;
+		    h = dd->s.height;
+		    x = dd->s.center.x;
+		    y = dd->s.center.y;
+		    glBegin(GL_QUADS);
+		    glVertex2f(x-w, y+h);
+		    glVertex2f(x-w, y-h);
+		    glVertex2f(x+w, y-h);
+		    glVertex2f(x+w, y+h);
+		    glEnd();
+		    dd = dd->next;
+		    //duck sprite
+		    show_duck= 1;
+		    float wid = 50.0f;
+		    //float wid = 50.0f;
+		    duck_sprite5.pos[0] = x;
+		    duck_sprite5.pos[1] = y;
+		    duck_sprite5.pos[2] = s->center.z;
+		    //
+		    if(show_duck) {
+			glPushMatrix();
+			glTranslatef(duck_sprite5.pos[0], duck_sprite5.pos[1], duck_sprite5.pos[2]);
+			if (!silhouette) 
+			{
+				glBindTexture(GL_TEXTURE_2D, duckTexture5);
+			} else {	
+				glBindTexture(GL_TEXTURE_2D, duckSil5);
+				glEnable(GL_ALPHA_TEST);
+				glAlphaFunc(GL_GREATER, 0.0f);
+				glColor4ub(255,255,255,255);
+			}
+			glBegin(GL_QUADS);
+			if (duck_sprite5.vel[0] > 0.0) {
+				glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid,-wid);
+				glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
+				glTexCoord2f(1.0f, 0.0f); glVertex2i( wid, wid);
+				glTexCoord2f(1.0f, 1.0f); glVertex2i( wid,-wid);
+			} else {
+				glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid,-wid);
+				glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid, wid);
+				glTexCoord2f(0.0f, 0.0f); glVertex2i( wid, wid);
+				glTexCoord2f(0.0f, 1.0f); glVertex2i( wid,-wid);
+			}
+			glEnd();
+			glPopMatrix();
+			if (trees && silhouette) {
+				glBindTexture(GL_TEXTURE_2D, backgroundTransTexture);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+				glTexCoord2f(0.0f, 0.0f); glVertex2i(0, WINDOW_HEIGHT);
+				glTexCoord2f(1.0f, 0.0f); glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT);
+				glTexCoord2f(1.0f, 1.0f); glVertex2i(WINDOW_WIDTH, 0);
+				glEnd();
+			}
+			glDisable(GL_ALPHA_TEST);
+		      }
 		}
 		
 		glColor3ub(0, 0, 255);
 		while(fd)
 		{
-		w = fd->s.width;
-		h = fd->s.height;
-		x = fd->s.center.x;
-		y = fd->s.center.y;
-		glBegin(GL_QUADS);
-		glVertex2f(x-w, y+h);
-		glVertex2f(x-w, y-h);
-		glVertex2f(x+w, y-h);
-		glVertex2f(x+w, y+h);
-		glEnd();
-		fd = fd->next;
-		}
+		    w = fd->s.width;
+		    h = fd->s.height;
+		    x = fd->s.center.x;
+		    y = fd->s.center.y;
+		    glBegin(GL_QUADS);
+		    glVertex2f(x-w, y+h);
+		    glVertex2f(x-w, y-h);
+		    glVertex2f(x+w, y-h);
+		    glVertex2f(x+w, y+h);
+		    glEnd();
+		    fd = fd->next;
+		    //duck sprite
+		    show_duck= 1;
+		    float wid = 50.0f;
+		    //float wid = 50.0f;
+		    duck_sprite3.pos[0] = x;
+		    duck_sprite3.pos[1] = y;
+		    duck_sprite3.pos[2] = s->center.z;
+		    //
+		    if(show_duck) {
+			    glPushMatrix();
+			    glTranslatef(duck_sprite3.pos[0], duck_sprite3.pos[1], duck_sprite3.pos[2]);
+			    if (!silhouette)
+			    {
+				    glBindTexture(GL_TEXTURE_2D, duckTexture3);
+			    } else { 
+				    glBindTexture(GL_TEXTURE_2D, duckSil3);
+				    glEnable(GL_ALPHA_TEST);
+				    glAlphaFunc(GL_GREATER, 0.0f);
+				    glColor4ub(255,255,255,255);
+			    }
+			    glBegin(GL_QUADS);
+			    if (duck_sprite3.vel[0] > 0.0) {
+				    glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid,-wid);
+				    glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
+				    glTexCoord2f(1.0f, 0.0f); glVertex2i( wid, wid);
+				    glTexCoord2f(1.0f, 1.0f); glVertex2i( wid,-wid);
+			    } else {
+				    glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid,-wid);
+				    glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid, wid);
+				    glTexCoord2f(0.0f, 0.0f); glVertex2i( wid, wid);
+				    glTexCoord2f(0.0f, 1.0f); glVertex2i( wid,-wid);
+			    }
+			    glEnd();
+			    glPopMatrix();
+			    if (trees && silhouette) {
+				    glBindTexture(GL_TEXTURE_2D, backgroundTransTexture);
+				    glBegin(GL_QUADS);
+				    glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+				    glTexCoord2f(0.0f, 0.0f); glVertex2i(0, WINDOW_HEIGHT);
+				    glTexCoord2f(1.0f, 0.0f); glVertex2i(WINDOW_WIDTH, WINDOW_HEIGHT);
+				    glTexCoord2f(1.0f, 1.0f); glVertex2i(WINDOW_WIDTH, 0);
+				    glEnd();
+			    }
+			    glDisable(GL_ALPHA_TEST);
+			}
+		    }
 	}
 }
 
